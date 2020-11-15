@@ -3,11 +3,26 @@ import { TextInput, View, StyleSheet, Text, Button } from 'react-native';
 
 export const Form = () => {
   
-  const [city, setCity] = useState('');
+  const [city, onChangeText] = useState('');
   const [pressed, setPressed] = useState(false);
+  const [weather, setWeather] = useState([]);
+  const [cityError, setCityError] = useState(false)
 
-  const handlePress = () => {
-    // handle HTTP requests to get weather informations on Lyon
+
+  const handlePress = async () => {
+    const key = '924ee8d07fbaec9c2634a7dfcc3d11c6'
+    const url = `api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}`
+
+    try {
+      let response = await fetch(url)
+      let json = await response.json()
+      //update state with json.weather
+      //console.log(json.weather)
+    } catch(err) {
+      setCityError(true)
+      console.error(err)
+      // Network request failed error
+    }
   }
 
   return (
@@ -17,7 +32,7 @@ export const Form = () => {
 
         <TextInput
           style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-          onChange={event => setCity(event.target.value)}
+          onChangeText={text => onChangeText(text)}
           value={city}
           style={styles.textInput}
         />
